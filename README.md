@@ -1,31 +1,51 @@
+<div align="center">
+
 # FlowSave
 
-FlowSave is a lightweight video download web app for saving publicly accessible videos to local files. It pairs a premium, mobile-first Vue interface with a small FastAPI backend that wraps [`yt-dlp`](https://github.com/yt-dlp/yt-dlp).
+**A polished, mobile-first web app for saving publicly accessible videos with `yt-dlp`.**
 
-The MVP focuses on one reliable workflow: paste a public video link, inspect available formats, create a download job, watch progress, and download the generated file.
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Vue](https://img.shields.io/badge/Vue%203-Frontend-42B883?style=for-the-badge&logo=vue.js&logoColor=white)](https://vuejs.org/)
+[![yt-dlp](https://img.shields.io/badge/yt--dlp-Downloader-FF0066?style=for-the-badge)](https://github.com/yt-dlp/yt-dlp)
+
+[Features](#features) · [Quick Start](#quick-start) · [API](#api) · [Roadmap](#roadmap) · [Responsible Use](#responsible-use)
+
+</div>
+
+---
+
+FlowSave is a lightweight video download web app for saving publicly accessible videos to local files. It combines a cinematic Vue 3 interface with a small FastAPI backend that wraps [`yt-dlp`](https://github.com/yt-dlp/yt-dlp).
+
+The MVP focuses on one reliable workflow:
+
+```text
+Paste public URL -> Analyze video -> Choose format -> Create job -> Watch progress -> Download file
+```
 
 > FlowSave does not bypass DRM, paywalls, private content restrictions, platform permissions, or account-only access. Users are responsible for downloading only content they have the right to save.
 
-## Highlights
+## Features
 
-- Public video URL analysis through `yt-dlp`
-- Format and quality selection when the platform exposes downloadable formats
-- Background download jobs with progress polling
-- Safe local file delivery from a controlled download directory
-- Vue 3 + Vite + Tailwind CSS frontend with a cinematic dark premium style
-- FastAPI backend with no database requirement
-- Clear handling for split audio/video platforms such as Bilibili when `ffmpeg` is missing
-- Support for extracting the first URL from shared text, such as mobile app share messages
+- Analyze public video URLs through `yt-dlp`
+- Extract the first URL from mobile app share text
+- Display video title, platform, duration, thumbnail, and available formats
+- Create background download jobs with progress polling
+- Download completed files through a safe backend file endpoint
+- Detect missing `ffmpeg` and explain split audio/video limitations clearly
+- Tool-first landing page with a premium dark visual style
+- Mobile-friendly layout with accessible alerts and status messages
+- No database required for the MVP
 
-## Screens
+## Preview
 
-The current interface is designed as a tool-first landing page:
+FlowSave is designed as a product-like utility rather than a plain form:
 
-- Large paste/input area in the first viewport
-- Strong primary CTA for analysis
+- Large paste area in the first viewport
+- Strong primary CTA for video analysis
 - Format picker and job progress card
+- Clear permission and copyright boundary text
 - Pro feature previews for batch downloads, subtitles, AI summaries, and paid queues
-- Mobile-friendly controls with accessible alerts and status messages
 
 ## Tech Stack
 
@@ -67,11 +87,18 @@ The current interface is designed as a tool-first landing page:
 - Node.js 20+
 - `ffmpeg` recommended
 
-`ffmpeg` is important for platforms that return separate video-only and audio-only streams. Bilibili commonly behaves this way. Without `ffmpeg`, FlowSave will still analyze the video but will hide formats that require merging.
+`ffmpeg` is important for platforms that return separate video-only and audio-only streams. Bilibili commonly behaves this way. Without `ffmpeg`, FlowSave can still analyze the video, but it will hide formats that require merging.
 
 ## Quick Start
 
-### 1. Run the backend
+### 1. Clone the repository
+
+```powershell
+git clone https://github.com/shark688/shark-save.git
+cd shark-save
+```
+
+### 2. Run the backend
 
 ```powershell
 python -m venv .venv
@@ -82,7 +109,7 @@ uvicorn app.main:app --reload --app-dir backend --host 127.0.0.1 --port 8000
 
 Backend: `http://127.0.0.1:8000`
 
-### 2. Run the frontend
+### 3. Run the frontend
 
 ```powershell
 cd frontend
@@ -99,6 +126,13 @@ The Vite dev server proxies `/api` requests to `http://127.0.0.1:8000`.
 ### `GET /api/health`
 
 Returns service status and whether `ffmpeg` is available.
+
+```json
+{
+  "ok": true,
+  "ffmpeg_available": false
+}
+```
 
 ### `POST /api/analyze`
 
@@ -150,7 +184,7 @@ npm run build
 Current coverage includes:
 
 - URL validation and shared-text URL extraction
-- Safe filename/path handling
+- Safe filename and path handling
 - yt-dlp wrapper behavior with mocked extractors
 - split audio/video handling when `ffmpeg` is unavailable
 - API success and error responses
@@ -163,7 +197,7 @@ Current coverage includes:
 - No user accounts, database, billing, or quota system.
 - No cookie import or login-required video support.
 - No DRM, paywall, or permission bypass.
-- Some sites change extractor behavior frequently; `yt-dlp` should be kept up to date.
+- Some sites change extractor behavior frequently; keep `yt-dlp` up to date.
 
 ## Roadmap
 
@@ -179,3 +213,7 @@ Current coverage includes:
 ## Responsible Use
 
 FlowSave is a wrapper around `yt-dlp` for legitimate personal workflows such as saving public videos that the user has the right to download. Respect copyright, platform terms, creator permissions, and local law.
+
+## License
+
+No license has been selected yet. Add one before accepting external contributions or distributing packaged releases.
