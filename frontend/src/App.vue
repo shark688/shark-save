@@ -171,7 +171,7 @@ onBeforeUnmount(resetJob)
           <Play class="h-5 w-5 fill-current" aria-hidden="true" />
         </div>
         <div>
-          <p class="text-lg font-black tracking-normal">FlowSave</p>
+          <p class="text-lg font-black tracking-normal">SharkSave</p>
           <p class="text-xs font-medium text-slate-400">公开视频下载工作台</p>
         </div>
       </div>

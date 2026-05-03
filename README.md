@@ -1,6 +1,6 @@
 <div align="center">
 
-# FlowSave
+# SharkSave
 
 **A polished, mobile-first web app for saving publicly accessible videos with `yt-dlp`.**
 
@@ -17,7 +17,7 @@
 
 ---
 
-FlowSave is a lightweight video download web app for saving publicly accessible videos to local files. It combines a cinematic Vue 3 interface with a small FastAPI backend that wraps [`yt-dlp`](https://github.com/yt-dlp/yt-dlp).
+SharkSave is a lightweight video download web app for saving publicly accessible videos to local files. It combines a cinematic Vue 3 interface with a small FastAPI backend that wraps [`yt-dlp`](https://github.com/yt-dlp/yt-dlp).
 
 The MVP focuses on one reliable workflow:
 
@@ -25,7 +25,7 @@ The MVP focuses on one reliable workflow:
 Paste public URL -> Analyze video -> Choose format -> Create job -> Watch progress -> Download file
 ```
 
-> FlowSave does not bypass DRM, paywalls, private content restrictions, platform permissions, or account-only access. Users are responsible for downloading only content they have the right to save.
+> SharkSave does not bypass DRM, paywalls, private content restrictions, platform permissions, or account-only access. Users are responsible for downloading only content they have the right to save.
 
 ## Features
 
@@ -41,7 +41,7 @@ Paste public URL -> Analyze video -> Choose format -> Create job -> Watch progre
 
 ## Preview
 
-FlowSave is designed as a product-like utility rather than a plain form:
+SharkSave is designed as a product-like utility rather than a plain form:
 
 - Large paste area in the first viewport
 - Strong primary CTA for video analysis
@@ -89,7 +89,7 @@ FlowSave is designed as a product-like utility rather than a plain form:
 - Node.js 20+
 - `ffmpeg` recommended
 
-`ffmpeg` is important for platforms that return separate video-only and audio-only streams. Bilibili commonly behaves this way. Without `ffmpeg`, FlowSave can still analyze the video, but it will hide formats that require merging.
+`ffmpeg` is important for platforms that return separate video-only and audio-only streams. Bilibili commonly behaves this way. Without `ffmpeg`, SharkSave can still analyze the video, but it will hide formats that require merging.
 
 ## Quick Start
 
@@ -214,7 +214,7 @@ Current coverage includes:
 
 ## Responsible Use
 
-FlowSave is a wrapper around `yt-dlp` for legitimate personal workflows such as saving public videos that the user has the right to download. Respect copyright, platform terms, creator permissions, and local law.
+SharkSave is a wrapper around `yt-dlp` for legitimate personal workflows such as saving public videos that the user has the right to download. Respect copyright, platform terms, creator permissions, and local law.
 
 ## License
 
