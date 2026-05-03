@@ -23,8 +23,9 @@ class DownloadResult:
 
 
 class YtdlpService:
-    def __init__(self, ffmpeg_available: bool, ydl_cls: Optional[type] = None) -> None:
-        self.ffmpeg_available = ffmpeg_available
+    def __init__(self, ffmpeg_location: str | None = None, ydl_cls: Optional[type] = None) -> None:
+        self.ffmpeg_location = ffmpeg_location
+        self.ffmpeg_available = bool(ffmpeg_location)
         self._ydl_cls = ydl_cls
 
     @property
@@ -93,6 +94,7 @@ class YtdlpService:
         }
         if self.ffmpeg_available:
             options["merge_output_format"] = "mp4"
+            options["ffmpeg_location"] = self.ffmpeg_location
 
         try:
             with self.ydl_cls(options) as ydl:

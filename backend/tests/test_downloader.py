@@ -52,7 +52,7 @@ class FakeYDL:
 
 
 def test_analyze_hides_merge_only_formats_when_ffmpeg_missing() -> None:
-    service = YtdlpService(ffmpeg_available=False, ydl_cls=FakeYDL)
+    service = YtdlpService(ffmpeg_location=None, ydl_cls=FakeYDL)
 
     response = service.analyze("https://example.com/watch?v=1")
 
@@ -74,7 +74,7 @@ class SplitOnlyYDL(FakeYDL):
 
 
 def test_analyze_returns_no_downloadable_formats_for_split_only_without_ffmpeg() -> None:
-    service = YtdlpService(ffmpeg_available=False, ydl_cls=SplitOnlyYDL)
+    service = YtdlpService(ffmpeg_location=None, ydl_cls=SplitOnlyYDL)
 
     response = service.analyze("https://example.com/watch?v=1")
 
@@ -83,8 +83,19 @@ def test_analyze_returns_no_downloadable_formats_for_split_only_without_ffmpeg()
     assert "ffmpeg" in response.warning
 
 
+def test_analyze_returns_merge_formats_for_split_only_with_ffmpeg() -> None:
+    service = YtdlpService(ffmpeg_location="C:\\tools\\ffmpeg.exe", ydl_cls=SplitOnlyYDL)
+
+    response = service.analyze("https://example.com/watch?v=1")
+
+    assert response.ffmpeg_available is True
+    assert response.warning is None
+    assert [item.id for item in response.formats] == ["bestvideo+bestaudio/best", "30080"]
+    assert response.formats[1].needs_ffmpeg is True
+
+
 def test_download_uses_progress_hook_and_returns_safe_display_name(tmp_path: Path) -> None:
-    service = YtdlpService(ffmpeg_available=True, ydl_cls=FakeYDL)
+    service = YtdlpService(ffmpeg_location="C:\\tools\\ffmpeg.exe", ydl_cls=FakeYDL)
     progress_events = []
 
     result = service.download(
@@ -99,3 +110,4 @@ def test_download_uses_progress_hook_and_returns_safe_display_name(tmp_path: Pat
     assert result.display_filename == "Demo Clip.mp4"
     assert progress_events[0]["downloaded_bytes"] == 64
     assert FakeYDL.last_options["merge_output_format"] == "mp4"
+    assert FakeYDL.last_options["ffmpeg_location"] == "C:\\tools\\ffmpeg.exe"

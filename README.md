@@ -34,7 +34,7 @@ Paste public URL -> Analyze video -> Choose format -> Create job -> Watch progre
 - Display video title, platform, duration, thumbnail, and available formats
 - Create background download jobs with progress polling
 - Download completed files through a safe backend file endpoint
-- Detect missing `ffmpeg` and explain split audio/video limitations clearly
+- Detect system or bundled `ffmpeg` so split audio/video streams can be merged
 - Tool-first landing page with a premium dark visual style
 - Mobile-friendly layout with accessible alerts and status messages
 - No database required for the MVP
@@ -87,9 +87,9 @@ SharkSave is designed as a product-like utility rather than a plain form:
 
 - Python 3.10+
 - Node.js 20+
-- `ffmpeg` recommended
+- Bundled `ffmpeg` via `imageio-ffmpeg`; system `ffmpeg` is used first when available
 
-`ffmpeg` is important for platforms that return separate video-only and audio-only streams. Bilibili commonly behaves this way. Without `ffmpeg`, SharkSave can still analyze the video, but it will hide formats that require merging.
+`ffmpeg` is important for platforms that return separate video-only and audio-only streams. Bilibili commonly behaves this way. SharkSave now installs `imageio-ffmpeg` with the backend dependencies, uses system `ffmpeg` when available, and otherwise passes the bundled binary to `yt-dlp` for merging.
 
 ## Quick Start
 
@@ -127,12 +127,13 @@ The Vite dev server proxies `/api` requests to `http://127.0.0.1:8000`.
 
 ### `GET /api/health`
 
-Returns service status and whether `ffmpeg` is available.
+Returns service status, whether `ffmpeg` is available, and where it was found.
 
 ```json
 {
   "ok": true,
-  "ffmpeg_available": false
+  "ffmpeg_available": true,
+  "ffmpeg_source": "bundled"
 }
 ```
 
@@ -204,7 +205,7 @@ Current coverage includes:
 ## Roadmap
 
 - Batch download queue
-- Optional `ffmpeg` installation guide and server capability checks
+- Server capability checks for system or bundled `ffmpeg`
 - Subtitle extraction and translation
 - AI video summary from subtitles or transcripts
 - User accounts, paid plans, and quota controls

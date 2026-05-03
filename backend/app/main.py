@@ -9,7 +9,7 @@ from fastapi.responses import FileResponse
 from .downloader import YtdlpService
 from .jobs import JobManager
 from .schemas import AnalyzeRequest, AnalyzeResponse, CreateJobRequest, JobResponse
-from .utils import UserFacingError, has_ffmpeg
+from .utils import UserFacingError, resolve_ffmpeg
 
 
 def create_app(job_manager: JobManager | None = None) -> FastAPI:
@@ -23,15 +23,17 @@ def create_app(job_manager: JobManager | None = None) -> FastAPI:
     )
 
     root = Path(__file__).resolve().parents[2]
+    ffmpeg_info = resolve_ffmpeg()
     manager = job_manager or JobManager(
-        downloader=YtdlpService(ffmpeg_available=has_ffmpeg()),
+        downloader=YtdlpService(ffmpeg_location=ffmpeg_info.location),
         download_root=root / "storage" / "downloads",
     )
     app.state.job_manager = manager
 
     @app.get("/api/health")
-    def health() -> dict[str, bool]:
-        return {"ok": True, "ffmpeg_available": has_ffmpeg()}
+    def health() -> dict[str, bool | str]:
+        current_ffmpeg = resolve_ffmpeg()
+        return {"ok": True, "ffmpeg_available": current_ffmpeg.available, "ffmpeg_source": current_ffmpeg.source}
 
     @app.post("/api/analyze", response_model=AnalyzeResponse)
     def analyze(payload: AnalyzeRequest) -> AnalyzeResponse:

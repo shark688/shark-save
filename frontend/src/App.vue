@@ -309,7 +309,11 @@ onBeforeUnmount(resetJob)
               class="rounded-lg border border-premium/35 bg-premium/10 px-4 py-3 text-sm leading-6 text-amber-50"
               role="status"
             >
-              当前没有可直接下载的格式。B 站等平台常见音视频分离流，需要服务端安装 ffmpeg 后才能合并下载。
+              {{
+                video.ffmpeg_available
+                  ? '当前没有找到平台可下载的格式，请换一个公开链接或稍后重试。'
+                  : '当前没有可直接下载的格式。B 站等平台常见音视频分离流，需要服务端安装 ffmpeg 后才能合并下载。'
+              }}
             </p>
           </label>
 

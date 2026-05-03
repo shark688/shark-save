@@ -1,13 +1,29 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 import re
 import shutil
 from pathlib import Path
 from urllib.parse import urlparse
 
+try:
+    import imageio_ffmpeg
+except ModuleNotFoundError:  # pragma: no cover - exercised when optional runtime is absent
+    imageio_ffmpeg = None
+
 
 class UserFacingError(Exception):
     """An expected error that can be shown directly to the user."""
+
+
+@dataclass(frozen=True)
+class FfmpegInfo:
+    location: str | None
+    source: str
+
+    @property
+    def available(self) -> bool:
+        return bool(self.location)
 
 
 def validate_public_url(url: str) -> str:
@@ -35,8 +51,24 @@ def sanitize_filename(name: str, fallback: str = "video") -> str:
     return cleaned[:120]
 
 
+def resolve_ffmpeg() -> FfmpegInfo:
+    system_ffmpeg = shutil.which("ffmpeg")
+    if system_ffmpeg:
+        return FfmpegInfo(location=system_ffmpeg, source="system")
+
+    if imageio_ffmpeg is not None:
+        try:
+            bundled_ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
+        except RuntimeError:
+            bundled_ffmpeg = None
+        if bundled_ffmpeg:
+            return FfmpegInfo(location=bundled_ffmpeg, source="bundled")
+
+    return FfmpegInfo(location=None, source="missing")
+
+
 def has_ffmpeg() -> bool:
-    return shutil.which("ffmpeg") is not None
+    return resolve_ffmpeg().available
 
 
 def ensure_within_directory(path: Path, parent: Path) -> Path:
