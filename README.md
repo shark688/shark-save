@@ -9,7 +9,9 @@
 [![Vue](https://img.shields.io/badge/Vue%203-Frontend-42B883?style=for-the-badge&logo=vue.js&logoColor=white)](https://vuejs.org/)
 [![yt-dlp](https://img.shields.io/badge/yt--dlp-Downloader-FF0066?style=for-the-badge)](https://github.com/yt-dlp/yt-dlp)
 
-[Features](#features) · [Quick Start](#quick-start) · [API](#api) · [Roadmap](#roadmap) · [Responsible Use](#responsible-use)
+[English](README.md) | [简体中文](README.zh-CN.md)
+
+[Features](#features) | [Quick Start](#quick-start) | [API](#api) | [Roadmap](#roadmap) | [Responsible Use](#responsible-use)
 
 </div>
 
