@@ -1,1 +1,1 @@
-"""Backend package for the video downloader MVP."""
+"""Backend package for SharkSave."""
