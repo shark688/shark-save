@@ -90,7 +90,7 @@ def test_analyze_returns_merge_formats_for_split_only_with_ffmpeg() -> None:
 
     assert response.ffmpeg_available is True
     assert response.warning is None
-    assert [item.id for item in response.formats] == ["bestvideo+bestaudio/best", "30080"]
+    assert [item.id for item in response.formats] == ["bestvideo+bestaudio/best", "30080+bestaudio/best"]
     assert response.formats[1].needs_ffmpeg is True
 
 
@@ -111,3 +111,17 @@ def test_download_uses_progress_hook_and_returns_safe_display_name(tmp_path: Pat
     assert progress_events[0]["downloaded_bytes"] == 64
     assert FakeYDL.last_options["merge_output_format"] == "mp4"
     assert FakeYDL.last_options["ffmpeg_location"] == "C:\\tools\\ffmpeg.exe"
+
+
+def test_download_uses_composed_video_audio_format(tmp_path: Path) -> None:
+    service = YtdlpService(ffmpeg_location="C:\\tools\\ffmpeg.exe", ydl_cls=FakeYDL)
+
+    service.download(
+        url="https://example.com/watch?v=1",
+        format_id="137+bestaudio/best",
+        output_dir=tmp_path,
+        job_id="job456",
+        progress_hook=lambda payload: None,
+    )
+
+    assert FakeYDL.last_options["format"] == "137+bestaudio/best"

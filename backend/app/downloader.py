@@ -128,7 +128,7 @@ class YtdlpService:
 
         for item in raw_formats:
             format_id = str(item.get("format_id") or "")
-            if not format_id or format_id in seen:
+            if not format_id:
                 continue
 
             vcodec = item.get("vcodec")
@@ -142,10 +142,14 @@ class YtdlpService:
             if needs_ffmpeg and not self.ffmpeg_available:
                 continue
 
-            seen.add(format_id)
+            download_format_id = f"{format_id}+bestaudio/best" if needs_ffmpeg else format_id
+            if download_format_id in seen:
+                continue
+
+            seen.add(download_format_id)
             formats.append(
                 FormatOption(
-                    id=format_id,
+                    id=download_format_id,
                     label=self._format_label(item, needs_ffmpeg),
                     ext=item.get("ext"),
                     resolution=item.get("resolution") or self._resolution(item),

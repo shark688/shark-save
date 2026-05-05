@@ -112,7 +112,7 @@ def test_analyze_returns_split_only_formats_when_ffmpeg_available(tmp_path: Path
     body = response.json()
     assert body["ffmpeg_available"] is True
     assert body["formats"][0]["id"] == "bestvideo+bestaudio/best"
-    assert body["formats"][1]["id"] == "30080"
+    assert body["formats"][1]["id"] == "30080+bestaudio/best"
 
 
 def test_analyze_returns_user_facing_error(tmp_path: Path) -> None:
